@@ -53,13 +53,13 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Real estate theme colors
+				// Real estate theme colors (updated to natural green)
 				estate: {
-					primary: "#0F3460",
-					secondary: "#B8973D",
-					accent: "#E94560",
+					primary: "#2F8F5F", // Natural green (was blue)
+					secondary: "#B8973D", // Gold accent
+					accent: "#E94560", // Red accent
 					light: "#F5F5F5",
-					dark: "#1A1A2E",
+					dark: "#1A1A2E", 
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',

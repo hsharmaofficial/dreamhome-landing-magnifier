@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   Carousel,
@@ -8,8 +8,7 @@ import {
   CarouselNext,
   CarouselPrevious 
 } from "@/components/ui/carousel";
-import { Star, Play, Quote } from 'lucide-react';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Star, Quote } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const testimonials = [
@@ -37,8 +36,6 @@ const testimonials = [
 ];
 
 const TestimonialsSection = () => {
-  const [videoDialogOpen, setVideoDialogOpen] = useState(false);
-
   return (
     <section className="py-16 bg-estate-primary/5">
       <div className="container mx-auto px-4">
@@ -112,28 +109,6 @@ const TestimonialsSection = () => {
           transition={{ duration: 0.6 }}
           className="max-w-4xl mx-auto"
         >
-          <div className="relative rounded-xl overflow-hidden shadow-xl">
-            <img 
-              src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=2073" 
-              alt="ATS Province D Olympia" 
-              className="w-full h-80 object-cover"
-            />
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-              <div className="text-center">
-                <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-                  Watch Customer Testimonials
-                </h3>
-                <button 
-                  onClick={() => setVideoDialogOpen(true)}
-                  className="bg-estate-secondary hover:bg-estate-secondary/90 text-white p-4 rounded-full transition-transform transform hover:scale-110"
-                  aria-label="Play testimonial video"
-                >
-                  <Play fill="white" size={24} />
-                </button>
-              </div>
-            </div>
-          </div>
-          
           <div className="bg-white p-6 rounded-xl shadow-lg border border-muted mt-8">
             <div className="flex flex-col md:flex-row items-center justify-between">
               <div className="mb-4 md:mb-0">
@@ -158,18 +133,6 @@ const TestimonialsSection = () => {
           </div>
         </motion.div>
       </div>
-      
-      <Dialog open={videoDialogOpen} onOpenChange={setVideoDialogOpen}>
-        <DialogContent className="max-w-3xl">
-          <div className="aspect-video bg-estate-primary/10 rounded-lg flex items-center justify-center">
-            <div className="text-center p-8">
-              <h3 className="text-xl font-semibold mb-4">Video Testimonial</h3>
-              <p className="text-muted-foreground mb-4">This is a placeholder for a video testimonial.</p>
-              <p className="text-sm text-muted-foreground">In a real implementation, this would contain an embedded video player showcasing customer testimonials.</p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
     </section>
   );
 };
