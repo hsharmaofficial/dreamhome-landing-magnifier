@@ -66,17 +66,27 @@ const HeroSection = () => {
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8">
               <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
                 <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
-                <span className="text-white text-sm">RERA Registered</span>
+                <span className="text-white text-sm">Grand 1.5L sq. ft. Clubhouse</span>
+              </div>
+              
+              <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
+                <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
+                <span className="text-white text-sm">14+ Elite Recreation Spaces</span>
+              </div>
+              
+              <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
+                <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
+                <span className="text-white text-sm">12+ Wellness Spaces</span>
+              </div>
+              
+              <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
+                <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
+                <span className="text-white text-sm">10+ Convenience Spaces</span>
               </div>
               
               <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
                 <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
                 <span className="text-white text-sm">Near Jewar Airport</span>
-              </div>
-              
-              <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
-                <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
-                <span className="text-white text-sm">High ROI Potential</span>
               </div>
             </div>
           </motion.div>

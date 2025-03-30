@@ -52,8 +52,10 @@ const GameWheel = () => {
         const rect = pricingSection.getBoundingClientRect();
         // If pricing section is in view and we haven't shown the popup for it yet
         if (rect.top < window.innerHeight && rect.bottom >= 0 && 
-            !hasSpun && !open && !pricingSectionVisited) {
+            !hasSpun && !open && !pricingSectionVisited && 
+            !sessionStorage.getItem('pricingSectionPopupShown')) {
           setPricingSectionVisited(true);
+          sessionStorage.setItem('pricingSectionPopupShown', 'true');
           setTimeout(() => {
             setOpen(true);
           }, 2000);
@@ -78,7 +80,7 @@ const GameWheel = () => {
     const randomRotation = 720 + Math.floor(Math.random() * 360) + segmentOffset;
     
     // Get the reward based on where wheel lands
-    const landedRewardIndex = Math.floor(((randomRotation % 360) / 360) * rewards.length);
+    const landedRewardIndex = rewards.length - 1 - Math.floor(((randomRotation % 360) / 360) * rewards.length);
     const selectedReward = rewards[landedRewardIndex];
     
     setRotation(randomRotation);
@@ -111,41 +113,6 @@ const GameWheel = () => {
     setRotation(0);
   };
 
-  // Generate segment styles
-  const generateSegmentStyles = () => {
-    const segmentAngle = 360 / rewards.length;
-    let styles = '';
-    
-    rewards.forEach((_, index) => {
-      const startAngle = index * segmentAngle;
-      const endAngle = (index + 1) * segmentAngle;
-      
-      // Alternate segment colors for better visibility
-      const color = index % 2 === 0 ? '#2F8F5F' : '#3DA373';
-      
-      styles += `
-        .segment-${index} {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          clip-path: polygon(50% 50%, ${getCoords(startAngle)}, ${getCoords(startAngle + 1)}, 
-            ${getCoords(endAngle - 1)}, ${getCoords(endAngle)}, 50% 50%);
-          background-color: ${color};
-        }
-      `;
-    });
-    
-    return <style>{styles}</style>;
-  };
-  
-  // Helper function to get coordinates on the circle edge
-  const getCoords = (angle) => {
-    const radians = (angle * Math.PI) / 180;
-    const x = 50 + 50 * Math.cos(radians);
-    const y = 50 + 50 * Math.sin(radians);
-    return `${x}% ${y}%`;
-  };
-
   return (
     <>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -167,7 +134,7 @@ const GameWheel = () => {
                 <div className="bg-estate-secondary text-white py-2 px-4 rounded-full text-sm font-bold inline-block mb-4">
                   REWARD COUPON
                 </div>
-                <h3 className="text-3xl font-bold text-[#2F8F5F] mb-2">
+                <h3 className="text-3xl font-bold text-estate-primary mb-2">
                   {reward}
                 </h3>
                 <p className="text-sm text-muted-foreground mb-4">
@@ -175,7 +142,7 @@ const GameWheel = () => {
                 </p>
                 
                 <div className="bg-white p-4 rounded-lg shadow-md mb-4">
-                  <p className="text-lg font-mono font-bold tracking-wider text-[#2F8F5F]">
+                  <p className="text-lg font-mono font-bold tracking-wider text-estate-primary">
                     ATS{Math.floor(100000 + Math.random() * 900000)}
                   </p>
                 </div>
@@ -188,7 +155,7 @@ const GameWheel = () => {
               <div className="flex justify-center mt-6">
                 <Button 
                   onClick={closeDialog}
-                  className="bg-[#2F8F5F] hover:bg-[#2F8F5F]/90"
+                  className="bg-estate-primary hover:bg-estate-primary/90"
                 >
                   Continue Browsing
                 </Button>
@@ -198,7 +165,7 @@ const GameWheel = () => {
             <div className="py-4">
               {showForm ? (
                 <div className="py-4">
-                  <p className="text-center text-lg font-semibold text-[#2F8F5F] mb-6">
+                  <p className="text-center text-lg font-semibold text-estate-primary mb-6">
                     You won: <span className="text-estate-secondary">{reward}</span>
                   </p>
                   <p className="text-muted-foreground mb-6 text-center text-sm">
@@ -212,12 +179,11 @@ const GameWheel = () => {
                 </div>
               ) : (
                 <div className="flex flex-col items-center py-6">
+                  {/* Improved Wheel Design */}
                   <div className="relative w-64 h-64 mb-8">
-                    {/* Wheel segments generated dynamically */}
-                    {generateSegmentStyles()}
-                    <div className="relative w-full h-full rounded-full overflow-hidden">
+                    <div className="absolute w-full h-full rounded-full border-4 border-estate-primary overflow-hidden">
                       <motion.div 
-                        className="w-full h-full rounded-full overflow-hidden relative"
+                        className="w-full h-full relative"
                         animate={{ 
                           rotate: rotation 
                         }}
@@ -226,21 +192,43 @@ const GameWheel = () => {
                           ease: "easeOut" 
                         }}
                       >
-                        {/* Render segments */}
-                        {rewards.map((_, index) => (
-                          <div key={index} className={`segment-${index}`} />
-                        ))}
-                        
-                        {/* Segment Text */}
-                        {rewards.map((reward, index) => {
-                          const angle = (index * 360) / rewards.length + 360 / rewards.length / 2;
+                        {/* Wheel segments */}
+                        {rewards.map((_, index) => {
+                          const rotation = index * (360 / rewards.length);
+                          const isEven = index % 2 === 0;
                           return (
                             <div 
-                              key={`text-${index}`}
-                              className="absolute w-full text-center top-6 left-0 right-0 text-white font-semibold text-sm"
+                              key={index}
+                              className={`absolute w-full h-full origin-center`}
                               style={{ 
-                                transform: `rotate(${angle}deg)`,
-                                transformOrigin: 'center 8rem'
+                                transform: `rotate(${rotation}deg)`,
+                                clipPath: `polygon(50% 50%, 50% 0, ${50 + 50 * Math.cos(Math.PI / rewards.length)}% ${50 - 50 * Math.sin(Math.PI / rewards.length)}%)`,
+                                background: isEven ? '#2F8F5F' : '#3DA373',
+                                zIndex: rewards.length - index
+                              }}
+                            />
+                          )
+                        })}
+                        
+                        {/* Reward Text - Positioned clearly on each segment */}
+                        {rewards.map((reward, index) => {
+                          const angle = index * (360 / rewards.length);
+                          const textAngle = angle + (360 / rewards.length) / 2;
+                          const radians = (textAngle - 90) * (Math.PI / 180);
+                          const x = 50 + 35 * Math.cos(radians);
+                          const y = 50 + 35 * Math.sin(radians);
+                          
+                          return (
+                            <div
+                              key={`text-${index}`}
+                              className="absolute text-white font-bold text-sm"
+                              style={{
+                                left: `${x}%`,
+                                top: `${y}%`,
+                                transform: `translate(-50%, -50%) rotate(${textAngle}deg)`,
+                                width: '80px',
+                                textAlign: 'center',
+                                textShadow: '1px 1px 2px rgba(0,0,0,0.7)'
                               }}
                             >
                               {reward}
@@ -250,11 +238,13 @@ const GameWheel = () => {
                       </motion.div>
                     </div>
                     
-                    {/* Wheel Center */}
-                    <div className="absolute w-6 h-6 bg-white rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 shadow-lg border-2 border-[#2F8F5F]"></div>
+                    {/* Center dot */}
+                    <div className="absolute w-8 h-8 bg-white rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30 shadow-md border-2 border-estate-primary flex items-center justify-center">
+                      <div className="w-4 h-4 rounded-full bg-estate-secondary"></div>
+                    </div>
                     
                     {/* Pointer */}
-                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-30">
                       <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
                         <path d="M15 0L30 30H0L15 0Z" fill="#E94560" />
                       </svg>
