@@ -14,18 +14,18 @@ import { Calculator, Phone } from 'lucide-react';
 const plotSizes = [
   {
     size: "150 sq. yards",
-    price: "₹45 Lakhs*",
+    price: "₹2.10 Crore*",
     features: ["Corner Plots Available", "Park Facing Options", "Flexible Payment Plans"]
   },
   {
-    size: "200 sq. yards",
-    price: "₹58 Lakhs*",
+    size: "210 sq. yards",
+    price: "₹2.94 Crore*",
     features: ["Premium Location", "Corner Plots Available", "Park Facing Options", "Flexible Payment Plans"],
     highlight: true
   },
   {
-    size: "300 sq. yards",
-    price: "₹84 Lakhs*",
+    size: "270 sq. yards",
+    price: "₹3.78 Crore*",
     features: ["Premium Location", "Corner Plots Available", "Park Facing Options", "Flexible Payment Plans"]
   }
 ];
@@ -70,6 +70,9 @@ const PricingSection = () => {
           <div className="w-20 h-1 bg-estate-secondary mx-auto mb-6"></div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Choose the perfect plot size that suits your requirements and budget.
+          </p>
+          <p className="text-md text-estate-secondary font-medium mt-2">
+            Price: ₹1.40 Lacs per sq. yard
           </p>
         </motion.div>
         

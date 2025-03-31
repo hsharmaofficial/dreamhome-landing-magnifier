@@ -12,27 +12,35 @@ import { Button } from "@/components/ui/button";
 import { FileText, Download, Home, ZoomIn, X } from 'lucide-react';
 import LeadForm from './LeadForm';
 
+// Document URLs
+const BROCHURE_URL = "https://drive.google.com/uc?export=download&id=1BTqD3xTujckdmZzHRVpn3VEdIByemIb4";
+const MASTER_PLAN_URL = "https://drive.google.com/uc?export=download&id=1PQ7mUbyxB8gViV3PA1GPasa91qWK6jHv";
+const PAYMENT_PLAN_URL = "https://drive.google.com/uc?export=download&id=1g-TzGgrvUn1b4cydtHsMBnVQzQ_UlbdG";
+
+// Master plan preview image - using direct Google Drive image link
+const masterPlanImage = "https://drive.google.com/uc?export=view&id=1PQ7mUbyxB8gViV3PA1GPasa91qWK6jHv";
+
 // Updated brochure items with better descriptions
 const brochureItems = [
   {
     title: "Master Plan",
     icon: <Home size={24} className="text-estate-primary" />,
-    description: "Complete township layout with plot locations and amenities"
+    description: "Complete township layout with plot locations and amenities",
+    url: MASTER_PLAN_URL
   },
   {
-    title: "Floor Plans",
+    title: "Payment Plan",
     icon: <FileText size={24} className="text-estate-primary" />,
-    description: "Various plot sizes from 150 sq. yards onwards"
+    description: "Flexible payment options for various plot sizes",
+    url: PAYMENT_PLAN_URL
   },
   {
     title: "Brochure",
     icon: <FileText size={24} className="text-estate-primary" />,
-    description: "Complete details about the project and amenities"
+    description: "Complete details about the project and amenities",
+    url: BROCHURE_URL
   }
 ];
-
-// Master plan preview image
-const masterPlanImage = "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?q=80&w=1587&auto=format";
 
 const BrochureSection = () => {
   const [openDialog, setOpenDialog] = useState(false);
@@ -50,17 +58,33 @@ const BrochureSection = () => {
     }
   };
 
+  const downloadFile = (url: string, filename: string) => {
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    link.setAttribute('target', '_blank');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const downloadAllFiles = () => {
+    // Download all files one by one with a small delay to prevent browser blocking
+    setTimeout(() => downloadFile(BROCHURE_URL, 'ATS_Province_D_Olympia_Brochure.pdf'), 500);
+    setTimeout(() => downloadFile(MASTER_PLAN_URL, 'ATS_Province_D_Olympia_Master_Plan.pdf'), 1500);
+    setTimeout(() => downloadFile(PAYMENT_PLAN_URL, 'ATS_Province_D_Olympia_Payment_Plan.pdf'), 2500);
+  };
+
   const handleDownloadSuccess = () => {
     setDownloadSuccess(true);
-    // Simulate PDF download after a short delay
-    setTimeout(() => {
-      const link = document.createElement('a');
-      link.href = '#'; // This would be the actual brochure URL
-      link.setAttribute('download', `ATS_Province_D_Olympia_${activeItem}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }, 500);
+    // Download current item first
+    const currentItem = brochureItems.find(item => item.title === activeItem);
+    if (currentItem) {
+      setTimeout(() => downloadFile(currentItem.url, `ATS_Province_D_Olympia_${activeItem}.pdf`), 500);
+    }
+    
+    // Download all files
+    downloadAllFiles();
   };
 
   return (
@@ -135,11 +159,14 @@ const BrochureSection = () => {
                     src={masterPlanImage} 
                     alt="ATS Province D Olympia Master Plan" 
                     className="w-full h-full object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?q=80&w=1587&auto=format";
+                    }}
                   />
                   <div className="absolute bottom-3 right-3">
                     <Button 
                       className="bg-estate-primary/80 hover:bg-estate-primary backdrop-blur-sm rounded-full h-10 w-10 p-0"
-                      onClick={() => window.open(masterPlanImage, '_blank')}
+                      onClick={() => window.open(MASTER_PLAN_URL, '_blank')}
                     >
                       <ZoomIn size={18} />
                     </Button>
@@ -184,21 +211,29 @@ const BrochureSection = () => {
                   </svg>
                 </div>
                 <p className="text-muted-foreground mb-4">
-                  Your download has started. If it doesn't begin automatically, please click the button below.
+                  All document downloads have started. If they don't begin automatically, please click the buttons below.
                 </p>
-                <Button className="mt-2 bg-estate-primary hover:bg-estate-primary/90">
-                  <Download size={16} className="mr-2" />
-                  Download Again
-                </Button>
+                <div className="space-y-3 mt-4">
+                  {brochureItems.map((item, index) => (
+                    <Button 
+                      key={index}
+                      className="w-full bg-estate-primary hover:bg-estate-primary/90"
+                      onClick={() => downloadFile(item.url, `ATS_Province_D_Olympia_${item.title}.pdf`)}
+                    >
+                      <Download size={16} className="mr-2" />
+                      Download {item.title}
+                    </Button>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="py-4">
                 <p className="text-muted-foreground mb-6 text-center">
-                  Please fill in your details to access the {activeItem}.
+                  Please fill in your details to access all project documents.
                 </p>
                 <LeadForm 
                   variant="popup" 
-                  ctaText={`Download ${activeItem}`}
+                  ctaText={`Download All Documents`}
                   onSuccess={handleDownloadSuccess}
                 />
               </div>

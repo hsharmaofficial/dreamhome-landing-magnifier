@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -17,11 +18,8 @@ interface LeadFormProps {
 
 const plotSizes = [
   "150 sq. yards",
-  "200 sq. yards",
-  "250 sq. yards",
-  "300 sq. yards",
-  "350 sq. yards",
-  "400+ sq. yards"
+  "210 sq. yards",
+  "270 sq. yards"
 ];
 
 const facingOptions = [
@@ -36,11 +34,11 @@ const facingOptions = [
 ];
 
 const budgetRanges = [
-  "₹50 - 75 Lakh",
-  "₹75 Lakh - 1 Crore",
-  "₹1 - 1.5 Crore",
-  "₹1.5 - 2 Crore",
-  "₹2 Crore+"
+  "₹2 - 2.5 Crore",
+  "₹2.5 - 3 Crore",
+  "₹3 - 3.5 Crore",
+  "₹3.5 - 4 Crore",
+  "₹4 Crore+"
 ];
 
 const LeadForm = ({ 
@@ -60,8 +58,9 @@ const LeadForm = ({
   const [consentChecked, setConsentChecked] = useState(false);
   const [emailServiceInitialized, setEmailServiceInitialized] = useState(false);
 
+  // Initialize EmailJS with your actual user ID
   useEffect(() => {
-    emailjs.init("YOUR_USER_ID");
+    emailjs.init("WKjHfDNX_5CvulN4n");
     setEmailServiceInitialized(true);
   }, []);
 
@@ -92,9 +91,11 @@ const LeadForm = ({
         consent: consentChecked ? 'Yes' : 'No',
       };
 
+      console.log("Sending email with params:", templateParams);
+
       const response = await emailjs.send(
-        'YOUR_SERVICE_ID',
-        'YOUR_TEMPLATE_ID',
+        'service_zvk7ypk',
+        'template_nj96gph',
         templateParams
       );
 
