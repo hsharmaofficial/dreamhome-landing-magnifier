@@ -11,6 +11,10 @@ import {
 import LeadForm from './LeadForm';
 import { MessageSquare, Phone } from 'lucide-react';
 
+// Phone number used throughout the component
+const PHONE_NUMBER = '+918420595900';
+const WHATSAPP_LINK = `https://wa.me/${PHONE_NUMBER.replace(/\+/g, '')}?text=I'm%20interested%20in%20ATS%20Province%20D%20Olympia`;
+
 const StickyCTA = () => {
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -19,7 +23,7 @@ const StickyCTA = () => {
       <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-4">
         {/* WhatsApp Button */}
         <motion.a
-          href="https://wa.me/919999999999?text=I'm%20interested%20in%20ATS%20Province%20D%20Olympia"
+          href={WHATSAPP_LINK}
           target="_blank"
           rel="noopener noreferrer"
           initial={{ scale: 0.8, opacity: 0 }}
@@ -59,7 +63,7 @@ const StickyCTA = () => {
           className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex justify-between items-center z-40 md:hidden shadow-lg"
         >
           <a
-            href="tel:+919999999999"
+            href={`tel:${PHONE_NUMBER}`}
             className="flex-1 flex items-center justify-center p-2 rounded-l-lg bg-estate-primary text-white"
           >
             <Phone size={18} className="mr-2" />

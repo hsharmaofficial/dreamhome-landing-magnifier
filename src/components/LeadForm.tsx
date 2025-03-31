@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useIsMobile } from "@/hooks/use-mobile";
+import emailjs from 'emailjs-com';
 
 interface LeadFormProps {
   variant?: 'hero' | 'popup' | 'inline';
@@ -58,6 +58,12 @@ const LeadForm = ({
     preference: ''
   });
   const [consentChecked, setConsentChecked] = useState(false);
+  const [emailServiceInitialized, setEmailServiceInitialized] = useState(false);
+
+  useEffect(() => {
+    emailjs.init("YOUR_USER_ID");
+    setEmailServiceInitialized(true);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -74,11 +80,36 @@ const LeadForm = ({
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const sendEmail = async () => {
+    try {
+      const templateParams = {
+        to_email: 'fabhomzoffcial@gmail.com',
+        from_name: formData.name,
+        from_email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        preference: formData.preference,
+        consent: consentChecked ? 'Yes' : 'No',
+      };
+
+      const response = await emailjs.send(
+        'YOUR_SERVICE_ID',
+        'YOUR_TEMPLATE_ID',
+        templateParams
+      );
+
+      console.log('Email sent successfully:', response);
+      return true;
+    } catch (error) {
+      console.error('Failed to send email:', error);
+      return false;
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    // Validate consent
     if (!consentChecked) {
       toast({
         title: "Consent required",
@@ -89,7 +120,6 @@ const LeadForm = ({
       return;
     }
     
-    // Validate phone number (basic validation for Indian numbers)
     const phoneRegex = /^[6-9]\d{9}$/;
     if (!phoneRegex.test(formData.phone)) {
       toast({
@@ -101,9 +131,11 @@ const LeadForm = ({
       return;
     }
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    const emailSent = await sendEmail();
+    
+    setIsSubmitting(false);
+    
+    if (emailSent) {
       toast({
         title: "Success!",
         description: "Thank you for your interest in ATS Province D Olympia. Our team will contact you soon.",
@@ -118,7 +150,6 @@ const LeadForm = ({
         onSuccess(formDataObj);
       }
       
-      // Reset form if not in a multi-step flow
       if (variant !== 'popup') {
         setFormData({
           name: '',
@@ -129,7 +160,13 @@ const LeadForm = ({
         });
         setConsentChecked(false);
       }
-    }, 1500);
+    } else {
+      toast({
+        title: "Form submission error",
+        description: "There was a problem submitting your form. Please try again later.",
+        variant: "destructive"
+      });
+    }
   };
 
   const formClasses = {

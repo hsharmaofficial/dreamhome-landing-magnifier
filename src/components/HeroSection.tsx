@@ -4,17 +4,18 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import LeadForm from './LeadForm';
 import { motion } from 'framer-motion';
 
-// Optimized hero images with better quality/size ratio
+// Higher quality hero images with better loading strategy
 const heroImages = [
-  "https://images.unsplash.com/photo-1637559460151-2913c59c290b?q=80&w=1200&auto=format&webp",
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&webp",
-  "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?q=80&w=1200&auto=format&webp",
+  "https://images.unsplash.com/photo-1637559460151-2913c59c290b?q=80&w=1200&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?q=80&w=1200&auto=format&fit=crop",
 ];
 
 const HeroSection = () => {
   const isMobile = useIsMobile();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loadError, setLoadError] = useState(false);
 
   // Preload images
   useEffect(() => {
@@ -24,13 +25,24 @@ const HeroSection = () => {
           const img = new Image();
           img.src = src;
           img.onload = resolve;
-          img.onerror = reject;
+          img.onerror = (err) => {
+            console.error("Failed to load image:", src, err);
+            reject(err);
+          };
         });
       });
 
       Promise.all(imagePromises)
-        .then(() => setImagesLoaded(true))
-        .catch(err => console.error("Failed to preload images:", err));
+        .then(() => {
+          setImagesLoaded(true);
+          setLoadError(false);
+        })
+        .catch(err => {
+          console.error("Failed to preload images:", err);
+          setLoadError(true);
+          // Set images as loaded even if there's an error, so we can show fallback
+          setImagesLoaded(true);
+        });
     };
 
     preloadImages();
@@ -56,6 +68,12 @@ const HeroSection = () => {
           </div>
         )}
         
+        {loadError && imagesLoaded && (
+          <div className="absolute inset-0 bg-gradient-to-b from-estate-primary to-estate-primary/70">
+            {/* Fallback background if images fail to load */}
+          </div>
+        )}
+        
         {heroImages.map((image, index) => (
           <div
             key={index}
@@ -69,6 +87,11 @@ const HeroSection = () => {
               alt={`ATS Province D Olympia - Image ${index + 1}`}
               className="w-full h-full object-cover"
               loading={index === 0 ? "eager" : "lazy"}
+              onError={(e) => {
+                console.error(`Error loading image ${index}:`, e);
+                const imgElement = e.currentTarget;
+                imgElement.style.display = 'none';
+              }}
             />
           </div>
         ))}
