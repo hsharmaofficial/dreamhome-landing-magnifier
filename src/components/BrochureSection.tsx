@@ -5,17 +5,19 @@ import {
   Dialog, 
   DialogContent, 
   DialogHeader, 
-  DialogTitle 
+  DialogTitle,
+  DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { FileText, Download, Home } from 'lucide-react';
+import { FileText, Download, Home, ZoomIn, X } from 'lucide-react';
 import LeadForm from './LeadForm';
 
+// Updated brochure items with better descriptions
 const brochureItems = [
   {
     title: "Master Plan",
     icon: <Home size={24} className="text-estate-primary" />,
-    description: "Detailed layout of the ATS Province D Olympia township"
+    description: "Complete township layout with plot locations and amenities"
   },
   {
     title: "Floor Plans",
@@ -29,15 +31,23 @@ const brochureItems = [
   }
 ];
 
+// Master plan preview image
+const masterPlanImage = "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?q=80&w=1587&auto=format";
+
 const BrochureSection = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openMasterPlan, setOpenMasterPlan] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [activeItem, setActiveItem] = useState<string | null>(null);
 
   const handleBrochureClick = (title: string) => {
-    setActiveItem(title);
-    setOpenDialog(true);
-    setDownloadSuccess(false);
+    if (title === "Master Plan") {
+      setOpenMasterPlan(true);
+    } else {
+      setActiveItem(title);
+      setOpenDialog(true);
+      setDownloadSuccess(false);
+    }
   };
 
   const handleDownloadSuccess = () => {
@@ -91,13 +101,73 @@ const BrochureSection = () => {
                 <p className="text-muted-foreground mb-4">{item.description}</p>
                 <Button variant="outline" className="mt-2 border-estate-secondary text-estate-primary">
                   <Download size={16} className="mr-2" />
-                  Download {item.title}
+                  {item.title === "Master Plan" ? "View Master Plan" : `Download ${item.title}`}
                 </Button>
               </div>
             </motion.div>
           ))}
         </div>
         
+        {/* Master Plan Dialog */}
+        <Dialog open={openMasterPlan} onOpenChange={setOpenMasterPlan}>
+          <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-auto">
+            <DialogHeader>
+              <DialogTitle className="text-center text-2xl font-bold text-estate-primary flex items-center justify-between">
+                <span>ATS Province D Olympia - Master Plan</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setOpenMasterPlan(false)}
+                  className="h-8 w-8 rounded-full"
+                >
+                  <X size={18} />
+                </Button>
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                Sector 22D, Yamuna Expressway, Greater Noida
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="relative">
+              <div className="mt-4 bg-estate-primary/5 p-2 rounded-lg overflow-hidden">
+                <div className="aspect-[4/3] relative rounded-md overflow-hidden border border-estate-primary/20">
+                  <img 
+                    src={masterPlanImage} 
+                    alt="ATS Province D Olympia Master Plan" 
+                    className="w-full h-full object-contain"
+                  />
+                  <div className="absolute bottom-3 right-3">
+                    <Button 
+                      className="bg-estate-primary/80 hover:bg-estate-primary backdrop-blur-sm rounded-full h-10 w-10 p-0"
+                      onClick={() => window.open(masterPlanImage, '_blank')}
+                    >
+                      <ZoomIn size={18} />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 text-center space-y-4">
+                <p className="text-muted-foreground text-sm">
+                  For detailed plot specifications and pricing, please fill the enquiry form.
+                </p>
+                <Button 
+                  className="bg-estate-primary hover:bg-estate-primary/90"
+                  onClick={() => {
+                    setOpenMasterPlan(false);
+                    setActiveItem("Master Plan");
+                    setOpenDialog(true);
+                  }}
+                >
+                  <Download size={16} className="mr-2" />
+                  Download Master Plan PDF
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+        
+        {/* Download Form Dialog */}
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>

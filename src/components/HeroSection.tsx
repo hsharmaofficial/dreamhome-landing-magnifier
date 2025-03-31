@@ -4,33 +4,63 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import LeadForm from './LeadForm';
 import { motion } from 'framer-motion';
 
+// Optimized hero images with better quality/size ratio
 const heroImages = [
-  "https://images.unsplash.com/photo-1637559460151-2913c59c290b?q=80&w=2070",
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2070",
-  "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?q=80&w=2070",
+  "https://images.unsplash.com/photo-1637559460151-2913c59c290b?q=80&w=1200&auto=format&webp",
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&webp",
+  "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?q=80&w=1200&auto=format&webp",
 ];
 
 const HeroSection = () => {
   const isMobile = useIsMobile();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  // Preload images
+  useEffect(() => {
+    const preloadImages = () => {
+      const imagePromises = heroImages.map((src) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+          img.onerror = reject;
+        });
+      });
+
+      Promise.all(imagePromises)
+        .then(() => setImagesLoaded(true))
+        .catch(err => console.error("Failed to preload images:", err));
+    };
+
+    preloadImages();
+  }, []);
 
   useEffect(() => {
+    if (!imagesLoaded) return;
+    
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
     }, 5000);
     
     return () => clearInterval(interval);
-  }, []);
+  }, [imagesLoaded]);
 
   return (
     <div className="relative min-h-screen flex items-center">
-      {/* Background Slider */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      {/* Background Slider with Loading State */}
+      <div className="absolute inset-0 z-0 overflow-hidden bg-estate-primary/30">
+        {!imagesLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-12 h-12 border-4 border-estate-secondary border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )}
+        
         {heroImages.map((image, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+              imagesLoaded && index === currentImageIndex ? 'opacity-100' : 'opacity-0'
             }`}
           >
             <div className="absolute inset-0 bg-black/50 z-10" />
@@ -38,6 +68,7 @@ const HeroSection = () => {
               src={image}
               alt={`ATS Province D Olympia - Image ${index + 1}`}
               className="w-full h-full object-cover"
+              loading={index === 0 ? "eager" : "lazy"}
             />
           </div>
         ))}
@@ -66,7 +97,7 @@ const HeroSection = () => {
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8">
               <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
                 <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
-                <span className="text-white text-sm">Grand 1.5L sq. ft. Clubhouse</span>
+                <span className="text-white text-sm">RERA Approved Project</span>
               </div>
               
               <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
@@ -81,12 +112,17 @@ const HeroSection = () => {
               
               <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
                 <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
-                <span className="text-white text-sm">10+ Convenience Spaces</span>
+                <span className="text-white text-sm">24×7 Security</span>
               </div>
               
               <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
                 <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
                 <span className="text-white text-sm">Near Jewar Airport</span>
+              </div>
+              
+              <div className="flex items-center bg-white/20 backdrop-blur-sm px-3 py-2 rounded-full">
+                <span className="bg-estate-secondary w-2 h-2 rounded-full mr-2"></span>
+                <span className="text-white text-sm">ATS Group Project</span>
               </div>
             </div>
           </motion.div>

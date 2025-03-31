@@ -5,11 +5,10 @@ import HeroSection from "../components/HeroSection";
 import BenefitsSection from "../components/BenefitsSection";
 import BrochureSection from "../components/BrochureSection";
 import LocationSection from "../components/LocationSection";
-import TestimonialsSection from "../components/TestimonialsSection";
 import PricingSection from "../components/PricingSection";
 import StickyCTA from "../components/StickyCTA";
 import Footer from "../components/Footer";
-import GameWheel from "../components/GameWheel";
+import LeadPopup from "../components/LeadPopup";
 
 const Index = () => {
   useEffect(() => {
@@ -31,9 +30,6 @@ const Index = () => {
       {/* Location Section */}
       <LocationSection />
       
-      {/* Testimonials Section */}
-      <TestimonialsSection />
-      
       {/* Pricing Section */}
       <PricingSection />
       
@@ -43,8 +39,8 @@ const Index = () => {
       {/* Floating CTAs */}
       <StickyCTA />
       
-      {/* Gamified Lead Generation */}
-      <GameWheel />
+      {/* Lead Generation Popup (replaced GameWheel) */}
+      <LeadPopup />
     </div>
   );
 };
