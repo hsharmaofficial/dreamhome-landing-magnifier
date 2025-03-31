@@ -10,7 +10,7 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Gift, Discount } from 'lucide-react';
+import { X, Gift, Tag } from 'lucide-react'; // Changed Discount to Tag
 import LeadForm from './LeadForm';
 import { toast } from "@/components/ui/use-toast";
 
@@ -130,7 +130,7 @@ const LeadPopup = () => {
                 >
                   <div className="flex items-center gap-3">
                     <div className="bg-estate-primary rounded-full p-2 text-white">
-                      <Discount size={18} />
+                      <Tag size={18} /> {/* Changed from Discount to Tag */}
                     </div>
                     <div>
                       <h3 className="font-medium text-estate-primary">{offer}</h3>
