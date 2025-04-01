@@ -1,14 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { useIsMobile } from "@/hooks/use-mobile";
 import emailjs from 'emailjs-com';
+import { submitToGoogleForm } from '@/utils/googleFormSubmit';
 
 interface LeadFormProps {
   variant?: 'hero' | 'popup' | 'inline';
@@ -58,7 +57,6 @@ const LeadForm = ({
   const [consentChecked, setConsentChecked] = useState(false);
   const [emailServiceInitialized, setEmailServiceInitialized] = useState(false);
 
-  // Initialize EmailJS with your actual user ID
   useEffect(() => {
     emailjs.init("WKjHfDNX_5CvulN4n");
     setEmailServiceInitialized(true);
@@ -107,6 +105,33 @@ const LeadForm = ({
     }
   };
 
+  const downloadDocuments = () => {
+    const documents = [
+      {
+        name: "ATS_Province_D_Olympia_Brochure.pdf",
+        url: "https://drive.google.com/uc?export=download&id=1BTqD3xTujckdmZzHRVpn3VEdIByemIb4"
+      },
+      {
+        name: "ATS_Province_D_Olympia_Master_Plan.pdf",
+        url: "https://drive.google.com/uc?export=download&id=1PQ7mUbyxB8gViV3PA1GPasa91qWK6jHv"
+      },
+      {
+        name: "ATS_Province_D_Olympia_Payment_Plan.pdf",
+        url: "https://drive.google.com/uc?export=download&id=1g-TzGgrvUn1b4cydtHsMBnVQzQ_UlbdG"
+      }
+    ];
+
+    documents.forEach(doc => {
+      const link = document.createElement('a');
+      link.href = doc.url;
+      link.setAttribute('download', doc.name);
+      link.setAttribute('target', '_blank');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -132,41 +157,55 @@ const LeadForm = ({
       return;
     }
 
-    const emailSent = await sendEmail();
-    
-    setIsSubmitting(false);
-    
-    if (emailSent) {
-      toast({
-        title: "Success!",
-        description: "Thank you for your interest in ATS Province D Olympia. Our team will contact you soon.",
+    try {
+      const googleFormSuccess = await submitToGoogleForm({
+        ...formData,
+        consent: consentChecked
       });
       
-      if (onSuccess) {
-        const formDataObj = new FormData();
-        Object.entries(formData).forEach(([key, value]) => {
-          formDataObj.append(key, value);
-        });
-        formDataObj.append('consent', consentChecked.toString());
-        onSuccess(formDataObj);
-      }
+      const emailSent = await sendEmail();
       
-      if (variant !== 'popup') {
-        setFormData({
-          name: '',
-          email: '',
-          phone: '',
-          city: '',
-          preference: ''
+      const isSuccessful = googleFormSuccess || emailSent;
+      
+      if (isSuccessful) {
+        toast({
+          title: "Success!",
+          description: "Thank you for your interest in ATS Province D Olympia. Our team will contact you soon.",
         });
-        setConsentChecked(false);
+        
+        downloadDocuments();
+        
+        if (onSuccess) {
+          const formDataObj = new FormData();
+          Object.entries(formData).forEach(([key, value]) => {
+            formDataObj.append(key, value);
+          });
+          formDataObj.append('consent', consentChecked.toString());
+          onSuccess(formDataObj);
+        }
+        
+        if (variant !== 'popup') {
+          setFormData({
+            name: '',
+            email: '',
+            phone: '',
+            city: '',
+            preference: ''
+          });
+          setConsentChecked(false);
+        }
+      } else {
+        throw new Error("Both submission methods failed");
       }
-    } else {
+    } catch (error) {
+      console.error("Form submission error:", error);
       toast({
         title: "Form submission error",
         description: "There was a problem submitting your form. Please try again later.",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
