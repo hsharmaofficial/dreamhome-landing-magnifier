@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { Building, Mail, Phone, MapPin, Instagram, Facebook, Twitter, Linkedin, Hexagon } from 'lucide-react';
+import { Building, Phone, MapPin, Instagram, Facebook, Twitter, Linkedin, Hexagon } from 'lucide-react';
 
 const Footer = () => {
   return (
-    <footer className="bg-estate-primary text-white pt-16 pb-8">
+    <footer className="bg-estate-primary text-white pt-16 pb-8" id="contact">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           <div>
             <div className="flex items-center mb-6">
               <Hexagon size={36} className="text-estate-secondary mr-2" />
@@ -60,7 +60,7 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-gray-300 hover:text-estate-secondary transition-colors">
+                <a href="#contact" className="text-gray-300 hover:text-estate-secondary transition-colors">
                   Contact Us
                 </a>
               </li>
@@ -80,33 +80,11 @@ const Footer = () => {
               </li>
               <li className="flex">
                 <Phone size={20} className="text-estate-secondary mr-3 flex-shrink-0" />
-                <a href="tel:+919999999999" className="text-gray-300 hover:text-estate-secondary transition-colors">
-                  +91 9999999999
-                </a>
-              </li>
-              <li className="flex">
-                <Mail size={20} className="text-estate-secondary mr-3 flex-shrink-0" />
-                <a href="mailto:info@atsprovincedolympia.com" className="text-gray-300 hover:text-estate-secondary transition-colors">
-                  info@atsprovincedolympia.com
+                <a href="tel:+918420595900" className="text-gray-300 hover:text-estate-secondary transition-colors">
+                  +91 8420595900
                 </a>
               </li>
             </ul>
-          </div>
-          
-          <div>
-            <h4 className="text-lg font-semibold mb-6">RERA Information</h4>
-            <div className="bg-white/10 rounded-lg p-4 mb-4">
-              <p className="text-sm text-gray-300 mb-2">
-                <strong>Project RERA No:</strong>
-              </p>
-              <p className="text-gray-300 font-mono">UPRERAPRJ556048/03/2025</p>
-            </div>
-            <div className="bg-white/10 rounded-lg p-4">
-              <p className="text-sm text-gray-300 mb-2">
-                <strong>Agent RERA No:</strong>
-              </p>
-              <p className="text-gray-300 font-mono">UPRERAAGT10202</p>
-            </div>
           </div>
         </div>
         

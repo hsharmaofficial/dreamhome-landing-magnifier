@@ -8,7 +8,6 @@ import LocationSection from "../components/LocationSection";
 import PricingSection from "../components/PricingSection";
 import StickyCTA from "../components/StickyCTA";
 import Footer from "../components/Footer";
-import LeadPopup from "../components/LeadPopup";
 
 const Index = () => {
   useEffect(() => {
@@ -38,9 +37,6 @@ const Index = () => {
       
       {/* Floating CTAs */}
       <StickyCTA />
-      
-      {/* Lead Generation Popup (replaced GameWheel) */}
-      <LeadPopup />
     </div>
   );
 };
