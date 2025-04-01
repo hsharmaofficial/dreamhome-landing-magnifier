@@ -106,29 +106,39 @@ const LeadForm = ({
   };
 
   const downloadDocuments = () => {
-    const documents = [
-      {
-        name: "ATS_Province_D_Olympia_Brochure.pdf",
-        url: "https://drive.google.com/uc?export=download&id=1BTqD3xTujckdmZzHRVpn3VEdIByemIb4"
-      },
-      {
-        name: "ATS_Province_D_Olympia_Master_Plan.pdf",
-        url: "https://drive.google.com/uc?export=download&id=1PQ7mUbyxB8gViV3PA1GPasa91qWK6jHv"
-      },
-      {
-        name: "ATS_Province_D_Olympia_Payment_Plan.pdf",
-        url: "https://drive.google.com/uc?export=download&id=1g-TzGgrvUn1b4cydtHsMBnVQzQ_UlbdG"
-      }
-    ];
+    return new Promise<void>((resolve) => {
+      const documents = [
+        {
+          name: "ATS_Province_D_Olympia_Brochure.pdf",
+          url: "https://drive.google.com/uc?export=download&id=1BTqD3xTujckdmZzHRVpn3VEdIByemIb4"
+        },
+        {
+          name: "ATS_Province_D_Olympia_Master_Plan.pdf",
+          url: "https://drive.google.com/uc?export=download&id=1PQ7mUbyxB8gViV3PA1GPasa91qWK6jHv"
+        },
+        {
+          name: "ATS_Province_D_Olympia_Payment_Plan.pdf",
+          url: "https://drive.google.com/uc?export=download&id=1g-TzGgrvUn1b4cydtHsMBnVQzQ_UlbdG"
+        }
+      ];
 
-    documents.forEach(doc => {
-      const link = document.createElement('a');
-      link.href = doc.url;
-      link.setAttribute('download', doc.name);
-      link.setAttribute('target', '_blank');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      setTimeout(() => {
+        documents.forEach((doc, index) => {
+          setTimeout(() => {
+            const link = document.createElement('a');
+            link.href = doc.url;
+            link.setAttribute('download', doc.name);
+            link.setAttribute('target', '_blank');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            if (index === documents.length - 1) {
+              resolve();
+            }
+          }, index * 300);
+        });
+      }, 100);
     });
   };
 
@@ -158,12 +168,20 @@ const LeadForm = ({
     }
 
     try {
-      const googleFormSuccess = await submitToGoogleForm({
+      const googleFormPromise = submitToGoogleForm({
         ...formData,
         consent: consentChecked
       });
       
-      const emailSent = await sendEmail();
+      const emailPromise = sendEmail();
+      
+      const downloadPromise = downloadDocuments();
+      
+      const [googleFormSuccess, emailSent] = await Promise.all([
+        googleFormPromise,
+        emailPromise,
+        downloadPromise
+      ]);
       
       const isSuccessful = googleFormSuccess || emailSent;
       
@@ -172,8 +190,6 @@ const LeadForm = ({
           title: "Success!",
           description: "Thank you for your interest in ATS Province D Olympia. Our team will contact you soon.",
         });
-        
-        downloadDocuments();
         
         if (onSuccess) {
           const formDataObj = new FormData();

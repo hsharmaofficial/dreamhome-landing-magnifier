@@ -4,14 +4,14 @@
  * Form ID: 1FAIpQLSducP1DKZGe6rY0e4z1M-xnH_prQVRTDEaf4DRMjEURWwDKWg
  */
 
-// Map of form field names to Google Form entry IDs
-// These IDs need to be extracted from the actual Google Form
+// Extract actual entry IDs from the Google Form
+// These are examples - you need to inspect the actual Google Form HTML to get the correct IDs
 const GOOGLE_FORM_FIELD_IDS: Record<string, string> = {
-  name: "entry.1234567890",      // Replace with actual entry ID for name field
-  email: "entry.1234567891",     // Replace with actual entry ID for email field
-  phone: "entry.1234567892",     // Replace with actual entry ID for phone field
-  city: "entry.1234567893",      // Replace with actual entry ID for city field
-  preference: "entry.1234567894" // Replace with actual entry ID for preference field
+  name: "entry.2005620554",      // Replace with actual entry ID for name field
+  email: "entry.1045781291",     // Replace with actual entry ID for email field
+  phone: "entry.1166974658",     // Replace with actual entry ID for phone field
+  city: "entry.1065046570",      // Replace with actual entry ID for city field
+  preference: "entry.839337160"  // Replace with actual entry ID for preference field
 };
 
 // Google Form submission URL
@@ -28,58 +28,39 @@ interface FormData {
 }
 
 /**
- * Submits form data to Google Form
- * 
- * Note: Due to CORS restrictions, this will use a hidden iframe approach
- * which doesn't return success/failure status but allows submission without redirects
+ * Submits form data to Google Form using fetch API
+ * This method avoids page navigation issues
  */
-export const submitToGoogleForm = (data: FormData): Promise<boolean> => {
-  return new Promise((resolve) => {
-    try {
-      // Create a form element
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = GOOGLE_FORM_URL;
-      form.target = "hidden-iframe";
-      form.style.display = "none";
+export const submitToGoogleForm = async (data: FormData): Promise<boolean> => {
+  try {
+    // Create FormData object
+    const formData = new FormData();
+    
+    // Add form fields
+    Object.entries(data).forEach(([key, value]) => {
+      if (GOOGLE_FORM_FIELD_IDS[key]) {
+        formData.append(
+          GOOGLE_FORM_FIELD_IDS[key], 
+          typeof value === "boolean" ? value.toString() : value
+        );
+      }
+    });
 
-      // Add form fields
-      Object.entries(data).forEach(([key, value]) => {
-        if (GOOGLE_FORM_FIELD_IDS[key]) {
-          const input = document.createElement("input");
-          input.type = "text";
-          input.name = GOOGLE_FORM_FIELD_IDS[key];
-          input.value = typeof value === "boolean" ? value.toString() : value;
-          form.appendChild(input);
-        }
-      });
-
-      // Create hidden iframe to target form submission
-      const iframe = document.createElement("iframe");
-      iframe.name = "hidden-iframe";
-      iframe.style.display = "none";
-      
-      // Add iframe and form to DOM
-      document.body.appendChild(iframe);
-      document.body.appendChild(form);
-
-      // Submit form after short delay to ensure iframe is loaded
-      setTimeout(() => {
-        form.submit();
-        
-        // Clean up after submission
-        setTimeout(() => {
-          document.body.removeChild(form);
-          document.body.removeChild(iframe);
-          
-          // We assume success since we can't actually check with this method
-          // due to CORS restrictions
-          resolve(true);
-        }, 1000);
-      }, 100);
-    } catch (error) {
-      console.error("Error submitting to Google Form:", error);
-      resolve(false);
-    }
-  });
+    // Use fetch with no-cors mode to submit the form
+    // Note: This will always return an opaque response that cannot be read
+    // but it will successfully submit the form without redirecting
+    const response = await fetch(GOOGLE_FORM_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
+    
+    // Since we're using no-cors, we can't directly check if it was successful
+    // We just assume it worked if no error was thrown
+    console.log("Google Form submission attempt completed");
+    return true;
+  } catch (error) {
+    console.error("Error submitting to Google Form:", error);
+    return false;
+  }
 };
