@@ -41,6 +41,22 @@ const budgetRanges = [
   "₹4 Crore+"
 ];
 
+// Document URLs for auto-download
+const DOCUMENTS = [
+  {
+    name: "Homeskraft_Brochure.pdf",
+    url: "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489282/Homeskraft_brochure_up8xde.pdf"
+  },
+  {
+    name: "Master_Plan.pdf",
+    url: "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489281/Master_layout_axzrwp.pdf"
+  },
+  {
+    name: "Payment_Plan.jpg",
+    url: "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489281/Payment_Pan_rth9zq.jpg"
+  }
+];
+
 const LeadForm = ({ 
   variant = 'inline', 
   onSuccess, 
@@ -144,38 +160,27 @@ const LeadForm = ({
 
   const downloadDocuments = () => {
     return new Promise<void>((resolve) => {
-      const documents = [
-        {
-          name: "ATS_Province_D_Olympia_Brochure.pdf",
-          url: "https://drive.google.com/uc?export=download&id=1BTqD3xTujckdmZzHRVpn3VEdIByemIb4"
-        },
-        {
-          name: "ATS_Province_D_Olympia_Master_Plan.pdf",
-          url: "https://drive.google.com/uc?export=download&id=1PQ7mUbyxB8gViV3PA1GPasa91qWK6jHv"
-        },
-        {
-          name: "ATS_Province_D_Olympia_Payment_Plan.pdf",
-          url: "https://drive.google.com/uc?export=download&id=1g-TzGgrvUn1b4cydtHsMBnVQzQ_UlbdG"
-        }
-      ];
-
-      setTimeout(() => {
-        documents.forEach((doc, index) => {
-          setTimeout(() => {
-            const link = document.createElement('a');
-            link.href = doc.url;
-            link.setAttribute('download', doc.name);
-            link.setAttribute('target', '_blank');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            if (index === documents.length - 1) {
-              resolve();
-            }
-          }, index * 300);
-        });
-      }, 100);
+      console.log("Starting downloads of all documents");
+      
+      // Start downloads with a small delay between each
+      DOCUMENTS.forEach((doc, index) => {
+        setTimeout(() => {
+          console.log(`Downloading document: ${doc.name}`);
+          const link = document.createElement('a');
+          link.href = doc.url;
+          link.setAttribute('download', doc.name);
+          link.setAttribute('target', '_blank');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          // Resolve after all documents have started downloading
+          if (index === DOCUMENTS.length - 1) {
+            console.log("All downloads initiated");
+            resolve();
+          }
+        }, index * 800); // Increased delay to prevent browser blocking
+      });
     });
   };
 
@@ -213,22 +218,24 @@ const LeadForm = ({
       
       const emailPromise = sendEmail();
       const web3FormPromise = submitWeb3Form();
-      const downloadPromise = downloadDocuments();
       
+      // Run form submissions in parallel with download
       const [googleFormSuccess, emailSent, web3FormSuccess] = await Promise.all([
         googleFormPromise,
         emailPromise,
-        web3FormPromise,
-        downloadPromise
+        web3FormPromise
       ]);
       
-      // If any submission method succeeded, consider it a success
+      // If any submission method succeeded, consider it a success and then download
       const isSuccessful = googleFormSuccess || emailSent || web3FormSuccess;
       
       if (isSuccessful) {
+        // Start downloading documents
+        await downloadDocuments();
+        
         toast({
           title: "Success!",
-          description: "Thank you for your interest in ATS Province D Olympia. Our team will contact you soon.",
+          description: "Thank you for your interest. Our team will contact you soon. Documents are downloading now.",
         });
         
         if (onSuccess) {

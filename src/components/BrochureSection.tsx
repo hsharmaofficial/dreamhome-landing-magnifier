@@ -12,13 +12,15 @@ import { Button } from "@/components/ui/button";
 import { FileText, Download, Home, ZoomIn, X } from 'lucide-react';
 import LeadForm from './LeadForm';
 
-// Document URLs
-const BROCHURE_URL = "https://drive.google.com/uc?export=download&id=1BTqD3xTujckdmZzHRVpn3VEdIByemIb4";
-const MASTER_PLAN_URL = "https://drive.google.com/uc?export=download&id=1PQ7mUbyxB8gViV3PA1GPasa91qWK6jHv";
-const PAYMENT_PLAN_URL = "https://drive.google.com/uc?export=download&id=1g-TzGgrvUn1b4cydtHsMBnVQzQ_UlbdG";
+// Document URLs updated to Cloudinary links
+const BROCHURE_URL = "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489282/Homeskraft_brochure_up8xde.pdf";
+const MASTER_PLAN_URL = "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489281/Master_layout_axzrwp.pdf";
+const PAYMENT_PLAN_URL = "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489281/Payment_Pan_rth9zq.jpg";
 
-// Master plan preview image - using direct Google Drive image link
-const masterPlanImage = "https://drive.google.com/uc?export=view&id=1PQ7mUbyxB8gViV3PA1GPasa91qWK6jHv";
+// Images for document preview
+const masterPlanPreview = "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489281/Master_layout_axzrwp.pdf";
+const brochurePreview = "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489282/Homeskraft_brochure_up8xde.pdf";
+const paymentPlanPreview = "https://res.cloudinary.com/dflmkihg4/image/upload/v1743489281/Payment_Pan_rth9zq.jpg";
 
 // Updated brochure items with better descriptions
 const brochureItems = [
@@ -26,31 +28,43 @@ const brochureItems = [
     title: "Master Plan",
     icon: <Home size={24} className="text-estate-primary" />,
     description: "Complete township layout with plot locations and amenities",
-    url: MASTER_PLAN_URL
+    url: MASTER_PLAN_URL,
+    preview: masterPlanPreview
   },
   {
     title: "Payment Plan",
     icon: <FileText size={24} className="text-estate-primary" />,
     description: "Flexible payment options for various plot sizes",
-    url: PAYMENT_PLAN_URL
+    url: PAYMENT_PLAN_URL,
+    preview: paymentPlanPreview
   },
   {
     title: "Brochure",
     icon: <FileText size={24} className="text-estate-primary" />,
     description: "Complete details about the project and amenities",
-    url: BROCHURE_URL
+    url: BROCHURE_URL,
+    preview: brochurePreview
   }
 ];
 
 const BrochureSection = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openMasterPlan, setOpenMasterPlan] = useState(false);
+  const [openPaymentPlan, setOpenPaymentPlan] = useState(false);
+  const [openBrochure, setOpenBrochure] = useState(false);
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [activeItem, setActiveItem] = useState<string | null>(null);
+  const [activePreview, setActivePreview] = useState<string | null>(null);
 
-  const handleBrochureClick = (title: string) => {
+  const handleBrochureClick = (title: string, preview: string) => {
+    setActivePreview(preview);
+    
     if (title === "Master Plan") {
       setOpenMasterPlan(true);
+    } else if (title === "Payment Plan") {
+      setOpenPaymentPlan(true);
+    } else if (title === "Brochure") {
+      setOpenBrochure(true);
     } else {
       setActiveItem(title);
       setOpenDialog(true);
@@ -58,37 +72,13 @@ const BrochureSection = () => {
     }
   };
 
-  const downloadFile = (url: string, filename: string) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', filename);
-    link.setAttribute('target', '_blank');
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  const downloadAllFiles = () => {
-    // Download all files one by one with a small delay to prevent browser blocking
-    setTimeout(() => downloadFile(BROCHURE_URL, 'ATS_Province_D_Olympia_Brochure.pdf'), 500);
-    setTimeout(() => downloadFile(MASTER_PLAN_URL, 'ATS_Province_D_Olympia_Master_Plan.pdf'), 1500);
-    setTimeout(() => downloadFile(PAYMENT_PLAN_URL, 'ATS_Province_D_Olympia_Payment_Plan.pdf'), 2500);
-  };
-
   const handleDownloadSuccess = () => {
     setDownloadSuccess(true);
-    // Download current item first
-    const currentItem = brochureItems.find(item => item.title === activeItem);
-    if (currentItem) {
-      setTimeout(() => downloadFile(currentItem.url, `ATS_Province_D_Olympia_${activeItem}.pdf`), 500);
-    }
-    
-    // Download all files
-    downloadAllFiles();
+    // Form submission in LeadForm.tsx now automatically downloads all documents
   };
 
   return (
-    <section className="py-16 bg-estate-primary/5">
+    <section className="py-16 bg-estate-primary/5" id="brochure">
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -102,7 +92,7 @@ const BrochureSection = () => {
           </h2>
           <div className="w-20 h-1 bg-estate-secondary mx-auto mb-6"></div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Get access to all the information you need about ATS Province D Olympia to make an informed decision.
+            Get access to all the information you need to make an informed decision.
           </p>
         </motion.div>
         
@@ -115,7 +105,7 @@ const BrochureSection = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.1 * index }}
               className="bg-white p-6 rounded-xl shadow-lg border border-muted hover:shadow-xl transition-all cursor-pointer hover:border-estate-secondary"
-              onClick={() => handleBrochureClick(item.title)}
+              onClick={() => handleBrochureClick(item.title, item.preview)}
             >
               <div className="flex flex-col items-center text-center">
                 <div className="bg-estate-primary/10 p-4 rounded-full mb-4">
@@ -125,7 +115,7 @@ const BrochureSection = () => {
                 <p className="text-muted-foreground mb-4">{item.description}</p>
                 <Button variant="outline" className="mt-2 border-estate-secondary text-estate-primary">
                   <Download size={16} className="mr-2" />
-                  {item.title === "Master Plan" ? "View Master Plan" : `Download ${item.title}`}
+                  {item.title === "Master Plan" || item.title === "Payment Plan" ? `View ${item.title}` : `Download ${item.title}`}
                 </Button>
               </div>
             </motion.div>
@@ -137,7 +127,7 @@ const BrochureSection = () => {
           <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-auto">
             <DialogHeader>
               <DialogTitle className="text-center text-2xl font-bold text-estate-primary flex items-center justify-between">
-                <span>ATS Province D Olympia - Master Plan</span>
+                <span>Master Plan</span>
                 <Button 
                   variant="ghost" 
                   size="icon" 
@@ -155,14 +145,14 @@ const BrochureSection = () => {
             <div className="relative">
               <div className="mt-4 bg-estate-primary/5 p-2 rounded-lg overflow-hidden">
                 <div className="aspect-[4/3] relative rounded-md overflow-hidden border border-estate-primary/20">
-                  <img 
-                    src={masterPlanImage} 
-                    alt="ATS Province D Olympia Master Plan" 
-                    className="w-full h-full object-contain"
+                  <iframe 
+                    src={`${masterPlanPreview}#view=FitH`}
+                    title="Master Plan"
+                    className="w-full h-full"
                     onError={(e) => {
                       e.currentTarget.src = "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?q=80&w=1587&auto=format";
                     }}
-                  />
+                  ></iframe>
                   <div className="absolute bottom-3 right-3">
                     <Button 
                       className="bg-estate-primary/80 hover:bg-estate-primary backdrop-blur-sm rounded-full h-10 w-10 p-0"
@@ -187,7 +177,131 @@ const BrochureSection = () => {
                   }}
                 >
                   <Download size={16} className="mr-2" />
-                  Download Master Plan PDF
+                  Download All Documents
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+        
+        {/* Payment Plan Dialog */}
+        <Dialog open={openPaymentPlan} onOpenChange={setOpenPaymentPlan}>
+          <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-auto">
+            <DialogHeader>
+              <DialogTitle className="text-center text-2xl font-bold text-estate-primary flex items-center justify-between">
+                <span>Payment Plan</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setOpenPaymentPlan(false)}
+                  className="h-8 w-8 rounded-full"
+                >
+                  <X size={18} />
+                </Button>
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                Flexible payment options for various plot sizes
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="relative">
+              <div className="mt-4 bg-estate-primary/5 p-2 rounded-lg overflow-hidden">
+                <div className="aspect-[4/3] relative rounded-md overflow-hidden border border-estate-primary/20">
+                  <img 
+                    src={paymentPlanPreview} 
+                    alt="Payment Plan" 
+                    className="w-full h-full object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?q=80&w=1587&auto=format";
+                    }}
+                  />
+                  <div className="absolute bottom-3 right-3">
+                    <Button 
+                      className="bg-estate-primary/80 hover:bg-estate-primary backdrop-blur-sm rounded-full h-10 w-10 p-0"
+                      onClick={() => window.open(PAYMENT_PLAN_URL, '_blank')}
+                    >
+                      <ZoomIn size={18} />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 text-center space-y-4">
+                <p className="text-muted-foreground text-sm">
+                  For detailed payment options, please fill the enquiry form.
+                </p>
+                <Button 
+                  className="bg-estate-primary hover:bg-estate-primary/90"
+                  onClick={() => {
+                    setOpenPaymentPlan(false);
+                    setActiveItem("Payment Plan");
+                    setOpenDialog(true);
+                  }}
+                >
+                  <Download size={16} className="mr-2" />
+                  Download All Documents
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+        
+        {/* Brochure Dialog */}
+        <Dialog open={openBrochure} onOpenChange={setOpenBrochure}>
+          <DialogContent className="sm:max-w-3xl max-h-[90vh] overflow-auto">
+            <DialogHeader>
+              <DialogTitle className="text-center text-2xl font-bold text-estate-primary flex items-center justify-between">
+                <span>Brochure</span>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  onClick={() => setOpenBrochure(false)}
+                  className="h-8 w-8 rounded-full"
+                >
+                  <X size={18} />
+                </Button>
+              </DialogTitle>
+              <DialogDescription className="text-center">
+                Complete details about the project and amenities
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="relative">
+              <div className="mt-4 bg-estate-primary/5 p-2 rounded-lg overflow-hidden">
+                <div className="aspect-[4/3] relative rounded-md overflow-hidden border border-estate-primary/20">
+                  <iframe 
+                    src={`${brochurePreview}#view=FitH`}
+                    title="Brochure"
+                    className="w-full h-full"
+                    onError={(e) => {
+                      e.currentTarget.src = "https://images.unsplash.com/photo-1574958269340-fa927503f3dd?q=80&w=1587&auto=format";
+                    }}
+                  ></iframe>
+                  <div className="absolute bottom-3 right-3">
+                    <Button 
+                      className="bg-estate-primary/80 hover:bg-estate-primary backdrop-blur-sm rounded-full h-10 w-10 p-0"
+                      onClick={() => window.open(BROCHURE_URL, '_blank')}
+                    >
+                      <ZoomIn size={18} />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6 text-center space-y-4">
+                <p className="text-muted-foreground text-sm">
+                  For detailed information, please fill the enquiry form.
+                </p>
+                <Button 
+                  className="bg-estate-primary hover:bg-estate-primary/90"
+                  onClick={() => {
+                    setOpenBrochure(false);
+                    setActiveItem("Brochure");
+                    setOpenDialog(true);
+                  }}
+                >
+                  <Download size={16} className="mr-2" />
+                  Download All Documents
                 </Button>
               </div>
             </div>
@@ -199,7 +313,7 @@ const BrochureSection = () => {
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
               <DialogTitle className="text-center text-2xl font-bold text-estate-primary">
-                {downloadSuccess ? "Download Started!" : `Download ${activeItem}`}
+                {downloadSuccess ? "Download Started!" : "Download All Documents"}
               </DialogTitle>
             </DialogHeader>
             
@@ -211,20 +325,14 @@ const BrochureSection = () => {
                   </svg>
                 </div>
                 <p className="text-muted-foreground mb-4">
-                  All document downloads have started. If they don't begin automatically, please click the buttons below.
+                  All document downloads have started. If they don't begin automatically, please check your browser's download settings.
                 </p>
-                <div className="space-y-3 mt-4">
-                  {brochureItems.map((item, index) => (
-                    <Button 
-                      key={index}
-                      className="w-full bg-estate-primary hover:bg-estate-primary/90"
-                      onClick={() => downloadFile(item.url, `ATS_Province_D_Olympia_${item.title}.pdf`)}
-                    >
-                      <Download size={16} className="mr-2" />
-                      Download {item.title}
-                    </Button>
-                  ))}
-                </div>
+                <Button 
+                  className="w-full bg-estate-primary hover:bg-estate-primary/90"
+                  onClick={() => setOpenDialog(false)}
+                >
+                  Continue Browsing
+                </Button>
               </div>
             ) : (
               <div className="py-4">
