@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { toast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
@@ -105,6 +106,42 @@ const LeadForm = ({
     }
   };
 
+  const submitWeb3Form = async () => {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('access_key', 'b329630c-2f50-44a3-be13-fa37ef63aeb5');
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('phone', formData.phone);
+      formDataToSend.append('city', formData.city);
+      formDataToSend.append('preferences', formData.preference);
+      formDataToSend.append('consent', consentChecked ? 'Yes' : 'No');
+      formDataToSend.append('from_name', 'ATS Province D Olympia Website');
+      formDataToSend.append('subject', 'New Lead from ATS Province D Olympia Website');
+      formDataToSend.append('to_email', 'fabhomzoffcial@gmail.com');
+
+      console.log("Submitting to Web3Forms");
+      
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formDataToSend
+      });
+      
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('Web3Forms submission successful:', data);
+        return true;
+      } else {
+        console.error('Web3Forms submission failed:', data);
+        return false;
+      }
+    } catch (error) {
+      console.error('Failed to submit Web3Form:', error);
+      return false;
+    }
+  };
+
   const downloadDocuments = () => {
     return new Promise<void>((resolve) => {
       const documents = [
@@ -168,22 +205,25 @@ const LeadForm = ({
     }
 
     try {
+      // Try all submission methods in parallel
       const googleFormPromise = submitToGoogleForm({
         ...formData,
         consent: consentChecked
       });
       
       const emailPromise = sendEmail();
-      
+      const web3FormPromise = submitWeb3Form();
       const downloadPromise = downloadDocuments();
       
-      const [googleFormSuccess, emailSent] = await Promise.all([
+      const [googleFormSuccess, emailSent, web3FormSuccess] = await Promise.all([
         googleFormPromise,
         emailPromise,
+        web3FormPromise,
         downloadPromise
       ]);
       
-      const isSuccessful = googleFormSuccess || emailSent;
+      // If any submission method succeeded, consider it a success
+      const isSuccessful = googleFormSuccess || emailSent || web3FormSuccess;
       
       if (isSuccessful) {
         toast({
@@ -211,7 +251,7 @@ const LeadForm = ({
           setConsentChecked(false);
         }
       } else {
-        throw new Error("Both submission methods failed");
+        throw new Error("All submission methods failed");
       }
     } catch (error) {
       console.error("Form submission error:", error);
