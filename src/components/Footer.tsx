@@ -106,6 +106,19 @@ const Footer = () => {
             </div>
           </div>
           
+          <div className="flex flex-col md:flex-row justify-between items-center mt-6">
+            <p className="text-gray-300 text-sm mb-4 md:mb-0">
+              Built to make you say <a href="https://realestate.ohwowglobal.com" target="_blank" rel="noopener noreferrer" className="text-estate-secondary hover:underline font-semibold">Oh.Wow!</a>
+            </p>
+            <a href="https://realestate.ohwowglobal.com" target="_blank" rel="noopener noreferrer" className="mb-4 md:mb-0">
+              <img 
+                src="/lovable-uploads/007e34e1-d2c5-4689-a79e-7d2bd86b60d0.png" 
+                alt="Oh.Wow Global" 
+                className="h-10 w-auto hover:opacity-90 transition-opacity"
+              />
+            </a>
+          </div>
+          
           <p className="text-xs text-gray-400 text-center mt-6">
             Disclaimer: The information, images, and visuals on this website are indicative only. The developer reserves the right to change any or all of the above-mentioned details without prior notice. This website does not constitute an offer and/or contract of any type between the developer and the recipient.
           </p>
