@@ -15,7 +15,7 @@ const Footer = () => {
             <p className="text-gray-300 mb-6">
               Premium residential plots at Yamuna Expressway, Sector 22D. Build your dream home with ATS Province D Olympia.
             </p>
-            <div className="flex space-x-4">
+            <div className="flex space-x-4 mb-6">
               <a href="#" className="hover:text-estate-secondary transition-colors">
                 <Facebook size={20} />
               </a>
@@ -27,6 +27,18 @@ const Footer = () => {
               </a>
               <a href="#" className="hover:text-estate-secondary transition-colors">
                 <Linkedin size={20} />
+              </a>
+            </div>
+            <div className="mb-6">
+              <p className="text-gray-300 text-sm mb-2">
+                Built to make you say <a href="https://realestate.ohwowglobal.com" target="_blank" rel="noopener noreferrer" className="text-estate-secondary hover:underline font-semibold">Oh.Wow!</a>
+              </p>
+              <a href="https://realestate.ohwowglobal.com" target="_blank" rel="noopener noreferrer">
+                <img 
+                  src="/lovable-uploads/007e34e1-d2c5-4689-a79e-7d2bd86b60d0.png" 
+                  alt="Oh.Wow Global" 
+                  className="h-10 w-auto hover:opacity-90 transition-opacity"
+                />
               </a>
             </div>
           </div>
@@ -104,19 +116,6 @@ const Footer = () => {
                 Disclaimer
               </a>
             </div>
-          </div>
-          
-          <div className="flex flex-col md:flex-row justify-between items-center mt-6">
-            <p className="text-gray-300 text-sm mb-4 md:mb-0">
-              Built to make you say <a href="https://realestate.ohwowglobal.com" target="_blank" rel="noopener noreferrer" className="text-estate-secondary hover:underline font-semibold">Oh.Wow!</a>
-            </p>
-            <a href="https://realestate.ohwowglobal.com" target="_blank" rel="noopener noreferrer" className="mb-4 md:mb-0">
-              <img 
-                src="/lovable-uploads/007e34e1-d2c5-4689-a79e-7d2bd86b60d0.png" 
-                alt="Oh.Wow Global" 
-                className="h-10 w-auto hover:opacity-90 transition-opacity"
-              />
-            </a>
           </div>
           
           <p className="text-xs text-gray-400 text-center mt-6">
