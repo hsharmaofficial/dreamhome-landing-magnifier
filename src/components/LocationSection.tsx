@@ -7,13 +7,17 @@ import {
   School, 
   ShoppingBag, 
   Train, 
-  Car 
+  Car,
+  Hospital,
+  Landmark,
+  Hotel,
+  Activity
 } from 'lucide-react';
 
 const locationPoints = [
   { 
     icon: <Plane className="mr-2" />, 
-    title: "Jewar Airport", 
+    title: "Jewar International Airport", 
     distance: "15 mins drive" 
   },
   { 
@@ -40,12 +44,32 @@ const locationPoints = [
     icon: <Car className="mr-2" />, 
     title: "Yamuna Expressway", 
     distance: "Connected" 
+  },
+  { 
+    icon: <Hospital className="mr-2" />, 
+    title: "Kailash Hospital", 
+    distance: "20 mins drive" 
+  },
+  { 
+    icon: <Landmark className="mr-2" />, 
+    title: "Bennett University", 
+    distance: "15 mins drive" 
+  },
+  { 
+    icon: <Hotel className="mr-2" />, 
+    title: "Jaypee Greens", 
+    distance: "25 mins drive" 
+  },
+  { 
+    icon: <Activity className="mr-2" />, 
+    title: "Formula 1 Track", 
+    distance: "20 mins drive" 
   }
 ];
 
 const LocationSection = () => {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white" id="location">
       <div className="container mx-auto px-4">
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
@@ -55,11 +79,11 @@ const LocationSection = () => {
           className="text-center mb-12"
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-estate-primary">
-            Strategic Location Advantage
+            Location Advantages
           </h2>
           <div className="w-20 h-1 bg-estate-secondary mx-auto mb-6"></div>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            ATS Province D Olympia is strategically located at Yamuna Expressway, Sector 22D, with excellent connectivity to major landmarks.
+          <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+            ATS Province D Olympia is strategically located at Yamuna Expressway, Sector 22D, with excellent connectivity to major landmarks. The upcoming Jewar International Airport and Film City are transforming this region into a prime investment destination.
           </p>
         </motion.div>
         
@@ -80,6 +104,7 @@ const LocationSection = () => {
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"
               title="ATS Province D Olympia Location Map"
+              aria-label="Map showing ATS Province D Olympia location at Sector 22D, Yamuna Expressway"
             ></iframe>
           </motion.div>
           
@@ -95,7 +120,7 @@ const LocationSection = () => {
               </h3>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                {locationPoints.map((point, index) => (
+                {locationPoints.slice(0, 8).map((point, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 10 }}
@@ -117,7 +142,11 @@ const LocationSection = () => {
               
               <div className="mt-8 p-4 bg-estate-secondary/10 rounded-lg border border-estate-secondary/20">
                 <p className="text-sm leading-relaxed text-estate-primary">
-                  <strong>Strategic Location:</strong> ATS Province D Olympia is situated in one of the fastest developing regions in NCR, just minutes away from the upcoming Jewar International Airport and the proposed Film City.
+                  <strong>Strategic Location:</strong> ATS Province D Olympia is situated in one of the fastest developing regions in NCR, just minutes away from the upcoming Jewar International Airport and the proposed Film City. This premium location offers excellent connectivity to Delhi, Noida, and Greater Noida via the Yamuna Expressway.
+                </p>
+                
+                <p className="text-sm leading-relaxed text-estate-primary mt-2">
+                  <strong>Investment Potential:</strong> With infrastructure developments like the Jewar International Airport, Film City, and other major projects coming up in the vicinity, property values in Sector 22D, Yamuna Expressway are expected to appreciate significantly in the coming years.
                 </p>
               </div>
             </div>

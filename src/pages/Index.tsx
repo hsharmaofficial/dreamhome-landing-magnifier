@@ -6,6 +6,7 @@ import BenefitsSection from "../components/BenefitsSection";
 import BrochureSection from "../components/BrochureSection";
 import LocationSection from "../components/LocationSection";
 import PricingSection from "../components/PricingSection";
+import TestimonialsSection from "../components/TestimonialsSection";
 import StickyCTA from "../components/StickyCTA";
 import Footer from "../components/Footer";
 
@@ -13,6 +14,16 @@ const Index = () => {
   useEffect(() => {
     // Scroll to top on load
     window.scrollTo(0, 0);
+    
+    // Add canonical URL for SEO
+    const link = document.createElement('link');
+    link.rel = 'canonical';
+    link.href = 'https://atshomekraftplot.com/ats-province-d-olympia-sector-22d';
+    document.head.appendChild(link);
+    
+    return () => {
+      document.head.removeChild(link);
+    };
   }, []);
 
   return (
@@ -22,6 +33,9 @@ const Index = () => {
       
       {/* Benefits Section */}
       <BenefitsSection />
+      
+      {/* Testimonials Section */}
+      <TestimonialsSection />
       
       {/* Brochure Download Section */}
       <BrochureSection />

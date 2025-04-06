@@ -5,10 +5,11 @@ import LeadForm from './LeadForm';
 import { motion } from 'framer-motion';
 
 // Higher quality hero images with better loading strategy
+// Using local images instead of Unsplash to avoid loading errors
 const heroImages = [
-  "https://images.unsplash.com/photo-1637559460151-2913c59c290b?q=80&w=1200&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1200&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?q=80&w=1200&auto=format&fit=crop",
+  "/lovable-uploads/007e34e1-d2c5-4689-a79e-7d2bd86b60d0.png", // Using the uploaded logo as a fallback
+  "/placeholder.svg",
+  "/placeholder.svg",
 ];
 
 const HeroSection = () => {
@@ -84,7 +85,7 @@ const HeroSection = () => {
             <div className="absolute inset-0 bg-black/50 z-10" />
             <img
               src={image}
-              alt={`ATS Province D Olympia - Image ${index + 1}`}
+              alt={`ATS Province D Olympia - Premium Residential Plots in Sector 22D, Yamuna Expressway - Image ${index + 1}`}
               className="w-full h-full object-cover"
               loading={index === 0 ? "eager" : "lazy"}
               onError={(e) => {
@@ -107,14 +108,11 @@ const HeroSection = () => {
             className="text-center lg:text-left w-full lg:w-1/2"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
-              Build Your Dream Home at 
-              <span className="block text-gradient bg-gradient-to-r from-estate-secondary to-white">
-                ATS Province D Olympia
-              </span>
+              ATS Homekraft Province D Olympia – Premium Residential Plots in Sector 22D, Yamuna Expressway
             </h1>
             
             <p className="text-lg md:text-xl text-white/90 mb-6 max-w-xl mx-auto lg:mx-0">
-              Premium Residential Plots at Yamuna Expressway, Sector 22D, Starting from 150 sq. yards.
+              Premium Residential Plots at Yamuna Expressway, Sector 22D, Starting from 150 sq. yards. RERA approved plots at only ₹1.3 Lakh/SqYd.
             </p>
             
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8">
