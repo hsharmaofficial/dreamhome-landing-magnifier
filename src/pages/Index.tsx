@@ -9,6 +9,7 @@ import PricingSection from "../components/PricingSection";
 import TestimonialsSection from "../components/TestimonialsSection";
 import StickyCTA from "../components/StickyCTA";
 import Footer from "../components/Footer";
+import ExitIntentPopup from "../components/ExitIntentPopup";
 
 const Index = () => {
   useEffect(() => {
@@ -51,6 +52,9 @@ const Index = () => {
       
       {/* Floating CTAs */}
       <StickyCTA />
+      
+      {/* Exit Intent Popup */}
+      <ExitIntentPopup />
     </div>
   );
 };

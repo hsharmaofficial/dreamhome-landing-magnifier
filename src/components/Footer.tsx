@@ -119,7 +119,8 @@ const Footer = () => {
           </div>
           
           <p className="text-xs text-gray-400 text-center mt-6">
-            Disclaimer: The information, images, and visuals on this website are indicative only. The developer reserves the right to change any or all of the above-mentioned details without prior notice. This website does not constitute an offer and/or contract of any type between the developer and the recipient.
+            RERA Registration No: UPRERAPRJ2130064. The information, images, and visuals on this website are indicative only. 
+            The developer reserves the right to change any or all of the above-mentioned details without prior notice.
           </p>
         </div>
       </div>

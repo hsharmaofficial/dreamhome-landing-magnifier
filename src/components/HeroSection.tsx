@@ -10,7 +10,7 @@ const HeroSection = () => {
 
   useEffect(() => {
     const img = new Image();
-    img.src = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80";
+    img.src = "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1600";
     img.onload = () => setImageLoaded(true);
     img.onerror = (err) => {
       console.error("Failed to load hero image:", err);
@@ -31,10 +31,11 @@ const HeroSection = () => {
         <div className="absolute inset-0 transition-opacity duration-1000 ease-in-out">
           <div className="absolute inset-0 bg-black/50 z-10" />
           <img
-            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80"
+            src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1600"
             alt="ATS Province D Olympia - Premium Residential Plots in Sector 22D, Yamuna Expressway"
             className="w-full h-full object-cover"
             loading="eager"
+            fetchpriority="high"
             onLoad={() => setImageLoaded(true)}
             onError={(e) => {
               console.error("Error loading hero image:", e);
