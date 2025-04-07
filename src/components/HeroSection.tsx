@@ -35,7 +35,7 @@ const HeroSection = () => {
             alt="ATS Province D Olympia - Premium Residential Plots in Sector 22D, Yamuna Expressway"
             className="w-full h-full object-cover"
             loading="eager"
-            fetchpriority="high"
+            fetchPriority="high"
             onLoad={() => setImageLoaded(true)}
             onError={(e) => {
               console.error("Error loading hero image:", e);

@@ -25,7 +25,8 @@ const ExitIntentPopup = () => {
     name: '',
     email: '',
     phone: '',
-    plotSize: ''
+    plotSize: '',
+    city: 'Greater Noida' // Add default city value
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -98,6 +99,7 @@ const ExitIntentPopup = () => {
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
+        city: formData.city, // Include the city field
         preference: `Preferred Plot Size: ${formData.plotSize}. Request for Free Site Visit with Pick-and-Drop.`,
         consent: true
       });
