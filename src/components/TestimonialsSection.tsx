@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 
@@ -118,10 +117,6 @@ const TestimonialsSection = () => {
                   <div className="bg-estate-primary/5 px-3 py-2 rounded-md">
                     <span className="text-xs text-estate-primary font-medium">Project RERA No:</span>
                     <span className="text-xs ml-1">UPRERAPRJ556048/03/2025</span>
-                  </div>
-                  <div className="bg-estate-primary/5 px-3 py-2 rounded-md">
-                    <span className="text-xs text-estate-primary font-medium">Agent RERA No:</span>
-                    <span className="text-xs ml-1">UPRERAAGT10202</span>
                   </div>
                 </div>
               </div>
