@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ import {
   DialogTitle 
 } from "@/components/ui/dialog";
 import LeadForm from './LeadForm';
-import { Calculator, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import ROIEstimator from './ROIEstimator';
 
 const plotSizes = [
@@ -76,112 +77,6 @@ const PricingSection = () => {
           </p>
         </motion.div>
         
-        {/* Calculators Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <ROIEstimator />
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="p-6 border rounded-xl shadow-lg"
-          >
-            <h3 className="text-xl font-semibold text-estate-primary mb-4">EMI Calculator</h3>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Loan Amount
-                </label>
-                <input
-                  type="range"
-                  min="1000000"
-                  max="10000000"
-                  step="100000"
-                  value={loanAmount}
-                  onChange={(e) => setLoanAmount(parseInt(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                />
-                <div className="flex justify-between mt-1">
-                  <span className="text-sm text-muted-foreground">₹10 Lakhs</span>
-                  <span className="text-sm font-medium text-estate-primary">
-                    ₹{(loanAmount / 100000).toFixed(2)} Lakhs
-                  </span>
-                  <span className="text-sm text-muted-foreground">₹1 Crore</span>
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Interest Rate (%)
-                </label>
-                <input
-                  type="range"
-                  min="6"
-                  max="12"
-                  step="0.1"
-                  value={interestRate}
-                  onChange={(e) => setInterestRate(parseFloat(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                />
-                <div className="flex justify-between mt-1">
-                  <span className="text-sm text-muted-foreground">6%</span>
-                  <span className="text-sm font-medium text-estate-primary">{interestRate}%</span>
-                  <span className="text-sm text-muted-foreground">12%</span>
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Loan Term (Years)
-                </label>
-                <input
-                  type="range"
-                  min="5"
-                  max="30"
-                  step="1"
-                  value={loanTerm}
-                  onChange={(e) => setLoanTerm(parseInt(e.target.value))}
-                  className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                />
-                <div className="flex justify-between mt-1">
-                  <span className="text-sm text-muted-foreground">5 years</span>
-                  <span className="text-sm font-medium text-estate-primary">{loanTerm} years</span>
-                  <span className="text-sm text-muted-foreground">30 years</span>
-                </div>
-              </div>
-              
-              <div className="bg-estate-primary/5 p-4 rounded-lg">
-                <h4 className="text-sm font-medium text-estate-primary mb-2">
-                  Your Estimated Monthly EMI
-                </h4>
-                <div className="text-3xl font-bold text-estate-secondary">
-                  ₹{calculateEMI().toLocaleString()}
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  *This is an approximation. Actual EMI may vary based on the lender's terms.
-                </p>
-              </div>
-              
-              <Button 
-                className="w-full bg-estate-primary hover:bg-estate-primary/90"
-                onClick={() => setOpenCallbackDialog(true)}
-              >
-                <Phone size={16} className="mr-2" />
-                Talk to a Financing Expert
-              </Button>
-            </div>
-          </motion.div>
-        </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
           {plotSizes.map((plot, index) => (
             <motion.div
@@ -233,23 +128,130 @@ const PricingSection = () => {
                     <Phone size={16} className="mr-2" />
                     Request Callback
                   </Button>
-                  
-                  <Button 
-                    variant="outline" 
-                    className="w-full border-estate-primary/20 text-estate-primary"
-                    onClick={() => {
-                      setLoanAmount(parseInt(plot.price.replace(/[^\d]/g, '')) * 100000);
-                      setOpenCalculatorDialog(true);
-                    }}
-                  >
-                    <Calculator size={16} className="mr-2" />
-                    Calculate EMI
-                  </Button>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
+        
+        {/* Calculators Section - Moved Below Pricing Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="mb-12"
+        >
+          <h3 className="text-2xl font-semibold text-center text-estate-primary mb-8">
+            Investment & Financial Calculators
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {/* ROI Estimator */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <ROIEstimator />
+            </motion.div>
+            
+            {/* EMI Calculator */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="p-6 border rounded-xl shadow-lg"
+            >
+              <h3 className="text-xl font-semibold text-estate-primary mb-4">EMI Calculator</h3>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Loan Amount
+                  </label>
+                  <input
+                    type="range"
+                    min="1000000"
+                    max="10000000"
+                    step="100000"
+                    value={loanAmount}
+                    onChange={(e) => setLoanAmount(parseInt(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between mt-1">
+                    <span className="text-sm text-muted-foreground">₹10 Lakhs</span>
+                    <span className="text-sm font-medium text-estate-primary">
+                      ₹{(loanAmount / 100000).toFixed(2)} Lakhs
+                    </span>
+                    <span className="text-sm text-muted-foreground">₹1 Crore</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Interest Rate (%)
+                  </label>
+                  <input
+                    type="range"
+                    min="6"
+                    max="12"
+                    step="0.1"
+                    value={interestRate}
+                    onChange={(e) => setInterestRate(parseFloat(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between mt-1">
+                    <span className="text-sm text-muted-foreground">6%</span>
+                    <span className="text-sm font-medium text-estate-primary">{interestRate}%</span>
+                    <span className="text-sm text-muted-foreground">12%</span>
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Loan Term (Years)
+                  </label>
+                  <input
+                    type="range"
+                    min="5"
+                    max="30"
+                    step="1"
+                    value={loanTerm}
+                    onChange={(e) => setLoanTerm(parseInt(e.target.value))}
+                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                  />
+                  <div className="flex justify-between mt-1">
+                    <span className="text-sm text-muted-foreground">5 years</span>
+                    <span className="text-sm font-medium text-estate-primary">{loanTerm} years</span>
+                    <span className="text-sm text-muted-foreground">30 years</span>
+                  </div>
+                </div>
+                
+                <div className="bg-estate-primary/5 p-4 rounded-lg">
+                  <h4 className="text-sm font-medium text-estate-primary mb-2">
+                    Your Estimated Monthly EMI
+                  </h4>
+                  <div className="text-3xl font-bold text-estate-secondary">
+                    ₹{calculateEMI().toLocaleString()}
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-2">
+                    *This is an approximation. Actual EMI may vary based on the lender's terms.
+                  </p>
+                </div>
+                
+                <Button 
+                  className="w-full bg-estate-primary hover:bg-estate-primary/90"
+                  onClick={() => setOpenCallbackDialog(true)}
+                >
+                  <Phone size={16} className="mr-2" />
+                  Talk to a Financing Expert
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
         
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
